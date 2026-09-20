@@ -104,6 +104,33 @@ const userInfoKeyboard = {
     }
 };
 
+// Helper function to check channel membership
+async function checkUserVerification(userId) {
+    const channelUsername = '@SRmodxPremium';
+    try {
+        const chatMember = await bot.getChatMember(channelUsername, userId);
+        const status = chatMember.status;
+        return ['creator', 'administrator', 'member'].includes(status);
+    } catch (e) {
+        return false;
+    }
+}
+
+// Helper function to send verification required message
+async function sendVerificationMessage(chatId) {
+    await bot.sendMessage(chatId, 
+        `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
+        `<blockquote>Please join our official channel first to use this bot! 👇</blockquote>`, {
+        parse_mode: 'HTML',
+        reply_markup: {
+            inline_keyboard: [
+                [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
+                [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
+            ]
+        }
+    });
+}
+
 // Express route for browser media viewer
 app.get('/sr/:filename', async (req, res) => {
     const filename = req.params.filename;
@@ -237,25 +264,17 @@ app.post(`/api/webhook`, async (req, res) => {
             const data = callbackQuery.data;
 
             if (data === 'check_subscription') {
-                const channelUsername = '@SRmodxPremium';
-                try {
-                    const chatMember = await bot.getChatMember(channelUsername, userId);
-                    const status = chatMember.status;
-                    const isMember = ['creator', 'administrator', 'member'].includes(status);
+                const isMember = await checkUserVerification(userId);
 
-                    if (isMember) {
-                        await bot.answerCallbackQuery(callbackQuery.id, { text: '✅ Verified successfully!', show_alert: false });
-                        await bot.deleteMessage(chatId, callbackQuery.message.message_id).catch(() => {});
-                        await bot.sendMessage(chatId, strings.welcome(callbackQuery.from.first_name), {
-                            parse_mode: 'HTML',
-                            reply_markup: { remove_keyboard: true }
-                        });
-                    } else {
-                        await bot.answerCallbackQuery(callbackQuery.id, { text: '❌ You have not joined the channel yet!', show_alert: true });
-                    }
-                } catch (e) {
-                    console.error("Subscription check error:", e);
-                    await bot.answerCallbackQuery(callbackQuery.id, { text: '⚠️ Error checking membership. Make sure you joined!', show_alert: true });
+                if (isMember) {
+                    await bot.answerCallbackQuery(callbackQuery.id, { text: '✅ Verified successfully!', show_alert: false });
+                    await bot.deleteMessage(chatId, callbackQuery.message.message_id).catch(() => {});
+                    await bot.sendMessage(chatId, strings.welcome(callbackQuery.from.first_name), {
+                        parse_mode: 'HTML',
+                        reply_markup: { remove_keyboard: true }
+                    });
+                } else {
+                    await bot.answerCallbackQuery(callbackQuery.id, { text: '❌ You have not joined the channel yet!', show_alert: true });
                 }
             }
             return res.status(200).send('OK');
@@ -274,14 +293,7 @@ app.post(`/api/webhook`, async (req, res) => {
             remove_keyboard: true
         };
 
-        // Hide temporary user keyboard when any command other than /user is sent
-        if (text.startsWith('/') && text !== '/user') {
-            await bot.sendMessage(chatId, ' ', {
-                reply_markup: hideKeyboard
-            }).catch(() => {});
-        }
-
-        // Handle /start with deep link payload or regular start with force-join verification
+        // Handle /start with deep link payload or regular start
         if (text.startsWith('/start')) {
             const parts = text.split(' ');
             if (parts.length > 1 && parts[1].startsWith('srmeta_')) {
@@ -294,49 +306,34 @@ app.post(`/api/webhook`, async (req, res) => {
                     return;
                 }
             } else {
-                // Check channel membership before sending welcome message
-                const channelUsername = '@SRmodxPremium';
-                try {
-                    const chatMember = await bot.getChatMember(channelUsername, userId);
-                    const status = chatMember.status;
-                    const isMember = ['creator', 'administrator', 'member'].includes(status);
-
-                    if (isMember) {
-                        await bot.sendMessage(chatId, strings.welcome(msg.from.first_name), {
-                            parse_mode: 'HTML',
-                            reply_markup: { remove_keyboard: true }
-                        });
-                    } else {
-                        await bot.sendMessage(chatId, 
-                            `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
-                            `<blockquote>Please join our official channel first to use this bot! 👇</blockquote>`, {
-                            parse_mode: 'HTML',
-                            reply_markup: {
-                                inline_keyboard: [
-                                    [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
-                                    [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
-                                ]
-                            }
-                        });
-                    }
-                } catch (e) {
-                    await bot.sendMessage(chatId, 
-                        `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
-                        `<blockquote>Please join our official channel first to use this bot! 👇</blockquote>`, {
+                const isMember = await checkUserVerification(userId);
+                if (isMember) {
+                    await bot.sendMessage(chatId, strings.welcome(msg.from.first_name), {
                         parse_mode: 'HTML',
-                        reply_markup: {
-                            inline_keyboard: [
-                                [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
-                                [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
-                            ]
-                        }
+                        reply_markup: { remove_keyboard: true }
                     });
+                } else {
+                    await sendVerificationMessage(chatId);
                 }
                 return;
             }
         }
 
-        else if (text === '/user') {
+        // Check verification for ALL other commands and messages
+        const isVerified = await checkUserVerification(userId);
+        if (!isVerified) {
+            await sendVerificationMessage(chatId);
+            return;
+        }
+
+        // Hide temporary user keyboard when any command other than /user is sent
+        if (text.startsWith('/') && text !== '/user') {
+            await bot.sendMessage(chatId, ' ', {
+                reply_markup: hideKeyboard
+            }).catch(() => {});
+        }
+
+        if (text === '/user') {
             await bot.sendMessage(chatId, 
                 `<blockquote>👤 <b>User Info Guide</b></blockquote>\n` +
                 `<blockquote>Please share a user using the button below to view their information. 🚀</blockquote>`, {
