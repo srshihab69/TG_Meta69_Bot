@@ -84,7 +84,7 @@ const strings = {
         `🔍 Type @username to auto-lookup any user</blockquote>`
 };
 
-// User selection keyboard
+// User selection keyboard with color style added
 const userInfoKeyboard = {
     reply_markup: {
         keyboard: [
@@ -94,7 +94,8 @@ const userInfoKeyboard = {
                     request_users: {
                         request_id: 101,
                         user_is_bot: false
-                    }
+                    },
+                    style: 'success'
                 }
             ]
         ],
@@ -292,7 +293,7 @@ app.post(`/api/webhook`, async (req, res) => {
                 ` · Contact my developer: <b>@srshihab69</b></blockquote>`, { 
                 parse_mode: 'HTML', 
                 reply_markup: { 
-                    inline_keyboard: [[{ text: '👨‍💻 Developer', url: 'https://t.me/srshihab69' }]]
+                    inline_keyboard: [[{ text: '👨‍💻 Developer', url: 'https://t.me/srshihab69', style: 'primary' }]]
                 } 
             });
         }
@@ -471,7 +472,7 @@ app.post(`/api/webhook`, async (req, res) => {
                                 parse_mode: 'HTML',
                                 reply_markup: {
                                     inline_keyboard: [
-                                        [{ text: `📥 Download HD Video (${sizeInMB.toFixed(1)} MB)`, url: videoDownloadUrl }]
+                                        [{ text: `📥 Download HD Video (${sizeInMB.toFixed(1)} MB)`, url: videoDownloadUrl, style: 'primary' }]
                                     ]
                                 }
                             }
@@ -604,7 +605,7 @@ app.post(`/api/webhook`, async (req, res) => {
                     `<blockquote>🆔 File ID: <code>${mId}</code>${mExtra}\n🔗 Direct Link : <code>${browserDirectLink}</code></blockquote>\n`;
                 
                 if (shareDeepLink) {
-                    inlineButtons.push([{ text: '📤 Share Link', switch_inline_query: shareDeepLink }]);
+                    inlineButtons.push([{ text: '📤 Share Link', switch_inline_query: shareDeepLink, style: 'success' }]);
                 }
             }
 
@@ -645,10 +646,10 @@ app.post(`/api/webhook`, async (req, res) => {
                             
                             if (chat.type === 'private') {
                                 const isBot = target.toLowerCase().endsWith('bot');
-                                inlineButtons.push([{ text: isBot ? `🤖 Start ${chat.first_name}` : `💬 Message ${chat.first_name}`, url: `t.me/${chat.username}` }]);
+                                inlineButtons.push([{ text: isBot ? `🤖 Start ${chat.first_name}` : `💬 Message ${chat.first_name}`, url: `t.me/${chat.username}`, style: 'primary' }]);
                             } else {
                                 const btnText = chat.type === 'channel' ? "📢 Join Channel" : "👥 Join Group";
-                                inlineButtons.push([{ text: btnText, url: `t.me/${chat.username}` }]);
+                                inlineButtons.push([{ text: btnText, url: `t.me/${chat.username}`, style: 'primary' }]);
                             }
                         } catch (e) {}
                     }
