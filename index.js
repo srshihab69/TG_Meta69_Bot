@@ -228,10 +228,44 @@ async function handleMediaPayload(chatId, mediaData) {
 app.post(`/api/webhook`, async (req, res) => {
     try {
         const update = req.body;
+
+        // Handle Callback Query for Verification button
+        if (update.callback_query) {
+            const callbackQuery = update.callback_query;
+            const chatId = callbackQuery.message.chat.id;
+            const userId = callbackQuery.from.id;
+            const data = callbackQuery.data;
+
+            if (data === 'check_subscription') {
+                const channelUsername = '@SRmodxPremium';
+                try {
+                    const chatMember = await bot.getChatMember(channelUsername, userId);
+                    const status = chatMember.status;
+                    const isMember = ['creator', 'administrator', 'member'].includes(status);
+
+                    if (isMember) {
+                        await bot.answerCallbackQuery(callbackQuery.id, { text: '✅ Verified successfully!', show_alert: false });
+                        await bot.deleteMessage(chatId, callbackQuery.message.message_id).catch(() => {});
+                        await bot.sendMessage(chatId, strings.welcome(callbackQuery.from.first_name), {
+                            parse_mode: 'HTML',
+                            reply_markup: { remove_keyboard: true }
+                        });
+                    } else {
+                        await bot.answerCallbackQuery(callbackQuery.id, { text: '❌ You have not joined the channel yet!', show_alert: true });
+                    }
+                } catch (e) {
+                    console.error("Subscription check error:", e);
+                    await bot.answerCallbackQuery(callbackQuery.id, { text: '⚠️ Error checking membership. Make sure you joined!', show_alert: true });
+                }
+            }
+            return res.status(200).send('OK');
+        }
+
         const msg = update.message;
         if (!msg) return res.status(200).send('OK');
 
         const chatId = msg.chat.id;
+        const userId = msg.from.id;
         const text = msg.text || msg.caption || "";
         const entities = (msg.entities || []).concat(msg.caption_entities || []);
         const hostUrl = process.env.RENDER_EXTERNAL_URL || `http://${req.get('host')}`;
@@ -247,7 +281,7 @@ app.post(`/api/webhook`, async (req, res) => {
             }).catch(() => {});
         }
 
-        // Handle /start with deep link payload (e.g., /start srmeta_xxxx)
+        // Handle /start with deep link payload or regular start with force-join verification
         if (text.startsWith('/start')) {
             const parts = text.split(' ');
             if (parts.length > 1 && parts[1].startsWith('srmeta_')) {
@@ -260,10 +294,44 @@ app.post(`/api/webhook`, async (req, res) => {
                     return;
                 }
             } else {
-                await bot.sendMessage(chatId, strings.welcome(msg.from.first_name), {
-                    parse_mode: 'HTML',
-                    reply_markup: { remove_keyboard: true }
-                });
+                // Check channel membership before sending welcome message
+                const channelUsername = '@SRmodxPremium';
+                try {
+                    const chatMember = await bot.getChatMember(channelUsername, userId);
+                    const status = chatMember.status;
+                    const isMember = ['creator', 'administrator', 'member'].includes(status);
+
+                    if (isMember) {
+                        await bot.sendMessage(chatId, strings.welcome(msg.from.first_name), {
+                            parse_mode: 'HTML',
+                            reply_markup: { remove_keyboard: true }
+                        });
+                    } else {
+                        await bot.sendMessage(chatId, 
+                            `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
+                            `<blockquote>Please join our official channel first to use this bot! 👇</blockquote>`, {
+                            parse_mode: 'HTML',
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
+                                    [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
+                                ]
+                            }
+                        });
+                    }
+                } catch (e) {
+                    await bot.sendMessage(chatId, 
+                        `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
+                        `<blockquote>Please join our official channel first to use this bot! 👇</blockquote>`, {
+                        parse_mode: 'HTML',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
+                                [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
+                            ]
+                        }
+                    });
+                }
                 return;
             }
         }
@@ -293,7 +361,10 @@ app.post(`/api/webhook`, async (req, res) => {
                 ` · Contact my developer: <b>@srshihab69</b></blockquote>`, { 
                 parse_mode: 'HTML', 
                 reply_markup: { 
-                    inline_keyboard: [[{ text: '👨‍💻 Developer', url: 'https://t.me/srshihab69', style: 'primary' }]]
+                    inline_keyboard: [
+                        [{ text: '👨‍💻 Developer', url: 'https://t.me/srshihab69', style: 'primary' }],
+                        [{ text: '📢 Backup Channel', url: 'https://t.me/sr_premiumApp', style: 'success' }]
+                    ]
                 } 
             });
         }
