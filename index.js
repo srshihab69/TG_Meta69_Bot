@@ -69,22 +69,22 @@ const verifiedInlineKeyboard = {
         [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],
         [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication', style: 'success' }],
         [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat', style: 'primary' }],
-        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }],
-        [{ text: '💰 Real time earning bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
+        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'success' }],
+        [{ text: '💰 Real Time Earning Bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
     ]
 };
 
 // TG InfoX Bot Single Button Layout for /bot command
 const infoXButtonKeyboard = {
     inline_keyboard: [
-        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }]
+        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'success' }]
     ]
 };
 
 // Support & Backup Channels 2 Inline Buttons Layout for /sup command
 const supportButtonKeyboard = {
     inline_keyboard: [
-        [{ text: '👨‍💻 Contact Developer', url: 'https://t.me/srahihab69', style: 'primary' }],
+        [{ text: '👨‍💻 Contact Developer', url: 'https://t.me/srshihab69', style: 'primary' }],
         [{ text: '🛡️ Backup Channels', url: 'https://t.me/sr_shihab69', style: 'success' }]
     ]
 };
