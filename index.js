@@ -25,11 +25,17 @@ const strings = {
         `<blockquote>👑 <b>TG Meta69 Bot - Help Menu</b></blockquote>\n` +
         `<blockquote>📋 <b>User Commands:</b>\n` +
         ` · /start - Start the bot & verification\n` +
-        ` · /help - Show this help menu</blockquote>`,
+        ` · /help - Show this help menu\n` +
+        ` · /bot - Show info and assistance\n` +
+        ` · /sup - Contact developer & backup channels</blockquote>`,
 
     infoPrompt: 
         `<blockquote>ℹ️ <b>Information & Assistance</b></blockquote>\n` +
-        `<blockquote>If you need any information or assistance, please tap the button below to connect with our official bot. 👇</blockquote>`
+        `<blockquote>If you need any information or assistance, please tap the button below to connect with our official bot. 👇</blockquote>`,
+
+    supportPrompt:
+        `<blockquote>🛠 <b>Support & Backup Channels</b></blockquote>\n` +
+        `<blockquote>Need help or want to join our backup channels? Choose from the options below: 👇</blockquote>`
 };
 
 async function checkUserVerification(userId) {
@@ -57,21 +63,29 @@ async function sendVerificationMessage(chatId) {
     });
 }
 
-// 5 Verified Inline Buttons Layout (Danger removed)
+// 5 Verified Inline Buttons Layout
 const verifiedInlineKeyboard = {
     inline_keyboard: [
         [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],
         [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication', style: 'success' }],
         [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat', style: 'primary' }],
-        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'success' }],
-        [{ text: '💰 Real Time Earning Bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
+        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }],
+        [{ text: '💰 Real time earning bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
     ]
 };
 
-// TG InfoX Bot Single Button Layout for other texts
+// TG InfoX Bot Single Button Layout for /bot command
 const infoXButtonKeyboard = {
     inline_keyboard: [
-        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'success' }]
+        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }]
+    ]
+};
+
+// Support & Backup Channels 2 Inline Buttons Layout for /sup command
+const supportButtonKeyboard = {
+    inline_keyboard: [
+        [{ text: '👨‍💻 Contact Developer', url: 'https://t.me/YourDeveloperUsername', style: 'primary' }],
+        [{ text: '🛡️ Backup Channels', url: 'https://t.me/YourBackupChannel', style: 'success' }]
     ]
 };
 
@@ -136,6 +150,16 @@ app.post(`/api/webhook`, async (req, res) => {
             await bot.sendMessage(chatId, strings.help, { 
                 parse_mode: 'HTML',
                 reply_markup: hideKeyboard
+            });
+        } else if (text.startsWith('/bot')) {
+            await bot.sendMessage(chatId, strings.infoPrompt, { 
+                parse_mode: 'HTML',
+                reply_markup: infoXButtonKeyboard
+            });
+        } else if (text.startsWith('/sup')) {
+            await bot.sendMessage(chatId, strings.supportPrompt, { 
+                parse_mode: 'HTML',
+                reply_markup: supportButtonKeyboard
             });
         } else {
             await bot.sendMessage(chatId, strings.infoPrompt, { 
