@@ -84,8 +84,8 @@ const infoXButtonKeyboard = {
 // Support & Backup Channels 2 Inline Buttons Layout for /sup command
 const supportButtonKeyboard = {
     inline_keyboard: [
-        [{ text: '👨‍💻 Contact Developer', url: 'https://t.me/YourDeveloperUsername', style: 'primary' }],
-        [{ text: '🛡️ Backup Channels', url: 'https://t.me/YourBackupChannel', style: 'success' }]
+        [{ text: '👨‍💻 Contact Developer', url: 'https://t.me/srahihab69', style: 'primary' }],
+        [{ text: '🛡️ Backup Channels', url: 'https://t.me/sr_shihab69', style: 'success' }]
     ]
 };
 
