@@ -50,28 +50,28 @@ async function sendVerificationMessage(chatId) {
         parse_mode: 'HTML',
         reply_markup: {
             inline_keyboard: [
-                [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium' }],
-                [{ text: '✅ Verify', callback_data: 'check_subscription' }]
+                [{ text: '📢 Join Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
+                [{ text: '✅ Verify', callback_data: 'check_subscription', style: 'success' }]
             ]
         }
     });
 }
 
-// 5 Verified Inline Buttons Layout
+// 5 Verified Inline Buttons Layout with style properties added back
 const verifiedInlineKeyboard = {
     inline_keyboard: [
-        [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp' }],
-        [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication' }],
-        [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat' }],
-        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bof' }],
-        [{ text: '💰 Real time earning bot', url: 'https://t.me/earncash_pro_bot' }]
+        [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],
+        [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication', style: 'success' }],
+        [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat', style: 'primary' }],
+        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }],
+        [{ text: '💰 Real time earning bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
     ]
 };
 
 // TG InfoX Bot Single Button Layout for other texts
 const infoXButtonKeyboard = {
     inline_keyboard: [
-        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bof' }]
+        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bof', style: 'success' }]
     ]
 };
 
@@ -138,7 +138,6 @@ app.post(`/api/webhook`, async (req, res) => {
                 reply_markup: hideKeyboard
             });
         } else {
-            // /start baadae onnanno message-er jonno ei section kaj korbe
             await bot.sendMessage(chatId, strings.infoPrompt, { 
                 parse_mode: 'HTML',
                 reply_markup: infoXButtonKeyboard
