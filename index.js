@@ -29,10 +29,10 @@ const formatSize = (bytes) => {
 const strings = {
     welcome: (name) => 
         `<blockquote>👋 <b>Hello, ${name}!</b></blockquote>\n` +
-        `<blockquote>Welcome to <b>TG InfoX Bot!</b> Explore user & media information, manage media tools, and download TikTok videos with ease. 🚀</blockquote>`,
+        `<blockquote>Welcome to <b>TG Meta69 Bot!</b> Explore user & media information, manage media tools, and download TikTok videos with ease. 🚀</blockquote>`,
     
     help: 
-        `<blockquote>👑 <b>TG InfoX Bot - Help Menu</b></blockquote>\n` +
+        `<blockquote>👑 <b>TG Meta69 Bot - Help Menu</b></blockquote>\n` +
         `<blockquote expandable>📋 <b>User Commands:</b>\n` +
         ` · /start - Start the bot\n` +
         ` · /user - Get user info guide\n` +
@@ -59,7 +59,7 @@ const strings = {
         ` · Reply /id to any message to get sender's ID\n` +
         ` · Forward from channels to get channel ID\n` +
         ` · Type @username anywhere — no command needed!</blockquote>\n` +
-        `<blockquote>📞 Support: @SRmodxPremium\n` +
+        `<blockquote>📞 Support: @SRModxPremium\n` +
         `🛠️ Made with ❤️ by @sr_premiumApp</blockquote>`,
 
     stat: (mediaCount, lat) => 
@@ -84,6 +84,7 @@ const strings = {
         `🔍 Type @username to auto-lookup any user</blockquote>`
 };
 
+// User selection keyboard with color style added
 const userInfoKeyboard = {
     reply_markup: {
         keyboard: [
@@ -103,6 +104,7 @@ const userInfoKeyboard = {
     }
 };
 
+// Helper function to check channel membership
 async function checkUserVerification(userId) {
     const channelUsername = '@SRmodxPremium';
     try {
@@ -114,6 +116,7 @@ async function checkUserVerification(userId) {
     }
 }
 
+// Helper function to send verification required message
 async function sendVerificationMessage(chatId) {
     await bot.sendMessage(chatId, 
         `<blockquote>⚠️ <b>Channel Verification Required</b></blockquote>\n` +
@@ -128,6 +131,7 @@ async function sendVerificationMessage(chatId) {
     });
 }
 
+// Express route for browser media viewer
 app.get('/sr/:filename', async (req, res) => {
     const filename = req.params.filename;
     const mediaData = mediaStore.get(filename);
@@ -137,7 +141,7 @@ app.get('/sr/:filename', async (req, res) => {
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Link Expired - TG InfoX Bot</title>
+                <title>Link Expired - TG Meta69 Bot</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <style>
                     body { font-family: Arial, sans-serif; background: #0f172a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
@@ -173,7 +177,7 @@ app.get('/sr/:filename', async (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>View Media - TG InfoX Bot</title>
+            <title>View Media - TG Meta69 Bot</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; }
@@ -191,13 +195,14 @@ app.get('/sr/:filename', async (req, res) => {
                     ${mediaHtml}
                 </div>
                 <a href="${mediaUrl}" class="download-btn" download>📥 Download File</a>
-                <div class="footer">Powered by TG InfoX Bot</div>
+                <div class="footer">Powered by TG Meta69 Bot</div>
             </div>
         </body>
         </html>
     `);
 });
 
+// Helper function to handle media retrieval from payload/link
 async function handleMediaPayload(chatId, mediaData) {
     if (mediaData) {
         const generatorName = mediaData.user ? (mediaData.user.first_name || 'Unknown User') : 'Unknown User';
@@ -251,6 +256,7 @@ app.post(`/api/webhook`, async (req, res) => {
     try {
         const update = req.body;
 
+        // Handle Callback Query for Verification button
         if (update.callback_query) {
             const callbackQuery = update.callback_query;
             const chatId = callbackQuery.message.chat.id;
@@ -287,6 +293,7 @@ app.post(`/api/webhook`, async (req, res) => {
             remove_keyboard: true
         };
 
+        // Handle /start with deep link payload or regular start
         if (text.startsWith('/start')) {
             const parts = text.split(' ');
             if (parts.length > 1 && parts[1].startsWith('srmeta_')) {
@@ -312,12 +319,14 @@ app.post(`/api/webhook`, async (req, res) => {
             }
         }
 
+        // Check verification for ALL other commands and messages
         const isVerified = await checkUserVerification(userId);
         if (!isVerified) {
             await sendVerificationMessage(chatId);
             return;
         }
 
+        // Hide temporary user keyboard when any command other than /user is sent
         if (text.startsWith('/') && text !== '/user') {
             await bot.sendMessage(chatId, ' ', {
                 reply_markup: hideKeyboard
@@ -346,12 +355,12 @@ app.post(`/api/webhook`, async (req, res) => {
         else if (text === '/sup') {
             await bot.sendMessage(chatId, `<blockquote>🛡️ <b>Need help or found a bug?</b></blockquote>\n` +
                 `<blockquote> · If you encounter any issues, have questions, or want to suggest a new feature, feel free to reach out!\n` +
-                ` · Contact support: <b>@SRmodxPremium</b></blockquote>`, { 
+                ` · Contact my developer: <b>@srshihab69</b></blockquote>`, { 
                 parse_mode: 'HTML', 
                 reply_markup: { 
                     inline_keyboard: [
-                        [{ text: '📢 Support Channel', url: 'https://t.me/SRmodxPremium', style: 'primary' }],
-                        [{ text: '🤖 Backup Bot', url: 'https://t.me/sr_premiumApp', style: 'success' }]
+                        [{ text: '👨‍💻 Developer', url: 'https://t.me/srshihab69', style: 'primary' }],
+                        [{ text: '📢 Backup Channel', url: 'https://t.me/sr_premiumApp', style: 'success' }]
                     ]
                 } 
             });
@@ -471,6 +480,7 @@ app.post(`/api/webhook`, async (req, res) => {
             await bot.sendMessage(chatId, `<blockquote>❌ <b>Link Expired or Not Found</b></blockquote>\n` + `<blockquote>This browser link has expired or is invalid.</blockquote>`, { parse_mode: 'HTML' });
         }
 
+        // ================= HIGH FILTERED TIKTOK HANDLER (30MB LIMIT + SHORT TEXT) =================
         else if (text.toLowerCase().includes('tiktok.com') || text.toLowerCase().includes('vm.tiktok.com')) {
             let videoDownloadUrl = "";
             let processingMsg = null;
@@ -513,7 +523,7 @@ app.post(`/api/webhook`, async (req, res) => {
 
                     if (sizeInMB <= 30) {
                         await bot.sendVideo(chatId, videoBuffer, {
-                            caption: `<blockquote>📥 <b>Downloaded via TG InfoX Bot</b>\n📊 Size: <code>${sizeInMB.toFixed(2)} MB</code>\n📞 Support: @SRmodxPremium</blockquote>`,
+                            caption: `<blockquote>📥 <b>Downloaded via TG Meta69 Bot</b>\n📊 Size: <code>${sizeInMB.toFixed(2)} MB</code>\n📢 Channel: @SRmodxPremium</blockquote>`,
                             parse_mode: 'HTML',
                             reply_markup: hideKeyboard
                         }, {
@@ -525,7 +535,6 @@ app.post(`/api/webhook`, async (req, res) => {
                         await bot.sendMessage(chatId, 
                             `<blockquote>⚠️ <b>Video is larger than 30MB!</b></blockquote>\n` +
                             `<blockquote>📊 File Size: <code>${sizeInMB.toFixed(2)} MB</code>\n` +
-                            `📞 Support: @SRmodxPremium\n` +
                             `🔗 Click the button below to download the video directly from the browser. ✅</blockquote>`, 
                             { 
                                 parse_mode: 'HTML',
@@ -557,6 +566,8 @@ app.post(`/api/webhook`, async (req, res) => {
                 return;
             }
         }
+
+        // ==============================================================================
 
         else {
             const matchParam = text.match(/[?&]start=(srmeta_[a-zA-Z0-9]+)/);
@@ -740,4 +751,4 @@ app.post(`/api/webhook`, async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`TG InfoX Bot Active on Port ${PORT}`));
+app.listen(PORT, () => console.log(`TG Meta69Bot Active on Port ${PORT}`));
