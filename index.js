@@ -525,6 +525,7 @@ app.post(`/api/webhook`, async (req, res) => {
                         await bot.sendMessage(chatId, 
                             `<blockquote>⚠️ <b>Video is larger than 30MB!</b></blockquote>\n` +
                             `<blockquote>📊 File Size: <code>${sizeInMB.toFixed(2)} MB</code>\n` +
+                            `📞 Support: @SRmodxPremium\n` +
                             `🔗 Click the button below to download the video directly from the browser. ✅</blockquote>`, 
                             { 
                                 parse_mode: 'HTML',
