@@ -27,9 +27,9 @@ const strings = {
         ` · /start - Start the bot & verification\n` +
         ` · /help - Show this help menu</blockquote>`,
 
-    guide: 
-        `<blockquote>ℹ️ <b>How to use this bot:</b></blockquote>\n` +
-        `<blockquote>Please use /start to verify your membership and access the bot features.</blockquote>`
+    infoPrompt: 
+        `<blockquote>ℹ️ <b>Information & Assistance</b></blockquote>\n` +
+        `<blockquote>If you need any information or assistance, please tap the button below to connect with our official bot. 👇</blockquote>`
 };
 
 async function checkUserVerification(userId) {
@@ -65,6 +65,13 @@ const verifiedInlineKeyboard = {
         [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat' }],
         [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bof' }],
         [{ text: '💰 Real time earning bot', url: 'https://t.me/earncash_pro_bot' }]
+    ]
+};
+
+// TG InfoX Bot Single Button Layout for other texts
+const infoXButtonKeyboard = {
+    inline_keyboard: [
+        [{ text: '🤖 TG InfoX Bot', url: 'https://t.me/tg_infox_bof' }]
     ]
 };
 
@@ -131,9 +138,10 @@ app.post(`/api/webhook`, async (req, res) => {
                 reply_markup: hideKeyboard
             });
         } else {
-            await bot.sendMessage(chatId, strings.guide, { 
+            // /start baadae onnanno message-er jonno ei section kaj korbe
+            await bot.sendMessage(chatId, strings.infoPrompt, { 
                 parse_mode: 'HTML',
-                reply_markup: hideKeyboard
+                reply_markup: infoXButtonKeyboard
             });
         }
 
@@ -146,4 +154,3 @@ app.post(`/api/webhook`, async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`TG Meta69 Bot Active on Port ${PORT}`));
-  
