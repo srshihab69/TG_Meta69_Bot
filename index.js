@@ -57,7 +57,7 @@ async function sendVerificationMessage(chatId) {
     });
 }
 
-// 5 Verified Inline Buttons Layout with style properties added back
+// 5 Verified Inline Buttons Layout with distinct styles/colors for each button
 const verifiedInlineKeyboard = {
     inline_keyboard: [
         [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],
