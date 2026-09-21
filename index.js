@@ -57,14 +57,14 @@ async function sendVerificationMessage(chatId) {
     });
 }
 
-// 5 Verified Inline Buttons Layout with 5 distinct individual colors
+// 5 Verified Inline Buttons Layout (Danger removed)
 const verifiedInlineKeyboard = {
     inline_keyboard: [
-        [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],      // 1st Color (Primary / Blue)
-        [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication', style: 'success' }],   // 2nd Color (Success / Green)
-        [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat', style: 'danger' }],         // 3rd Color (Danger / Red)
-        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'primary' }],      // 4th Color (Primary / Blue)
-        [{ text: '💰 Real Time Earning Bot', url: 'https://t.me/earncash_pro_bot', style: 'success' }] // 5th Color (Success / Green)
+        [{ text: '📢 SR PREMIUM APP', url: 'https://t.me/sr_premiumApp', style: 'primary' }],
+        [{ text: '📦 Modx- Application', url: 'https://t.me/modxApplication', style: 'success' }],
+        [{ text: '💬 Modx- CHAT Group', url: 'https://t.me/srmodxChat', style: 'primary' }],
+        [{ text: '🤖 Get TG InfoX Bot', url: 'https://t.me/tg_infox_bot', style: 'success' }],
+        [{ text: '💰 Real Time Earning Bot', url: 'https://t.me/earncash_pro_bot', style: 'primary' }]
     ]
 };
 
